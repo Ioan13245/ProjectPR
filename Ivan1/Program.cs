@@ -1,5 +1,9 @@
+using Ivan1.Database;
+using Ivan1.Models;
+using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
+
 var builder = WebApplication.CreateBuilder(args);
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 // Add services to the container.
@@ -12,6 +16,8 @@ try {
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
+    builder.Services.AddDbContext<StudentDbContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
