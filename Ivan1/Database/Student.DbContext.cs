@@ -9,10 +9,12 @@ namespace Ivan1.Database
     {
         DbSet<Student> Students { get; set; }
         DbSet<Group> Groups { get; set; }
+        DbSet<Discipline> Disciplines { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new StudentConfiguration());
             modelBuilder.ApplyConfiguration(new GroupConfiguration());
+            modelBuilder.ApplyConfiguration(new DisciplineConfigurations());
         }
         public StudentDbContext(DbContextOptions<StudentDbContext> options) : base(options)
         {

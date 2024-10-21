@@ -38,6 +38,9 @@ namespace Ivan1.Database.Configurations
                 .IsRequired()
                 .HasColumnName("c_student_middle_name")
                 .HasColumnType(ColumnType.String).HasMaxLength(100);
+            builder.Property(p => p.GroupId)
+                .IsRequired()
+                .HasColumnName("c_group_id");
 
             builder.ToTable(TableName)
                 .HasOne(p => p.Group)
@@ -50,6 +53,8 @@ namespace Ivan1.Database.Configurations
 
             builder.Navigation(p => p.Group)
                 .AutoInclude();
+
+           
         }
     }
 }

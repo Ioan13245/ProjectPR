@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ivan1.Migrations
 {
     [DbContext(typeof(StudentDbContext))]
-    [Migration("20240925105555_CreateDb")]
-    partial class CreateDb
+    [Migration("20240930110320_CreateDbW2")]
+    partial class CreateDbW2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,12 +24,34 @@ namespace Ivan1.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Ivan1.Models.Discipline", b =>
+                {
+                    b.Property<int>("DisciplineID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("discipline_id")
+                        .HasComment("Идентефикатор записи группы");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DisciplineID"));
+
+                    b.Property<string>("DisciplineName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar")
+                        .HasColumnName("c_discipline_name");
+
+                    b.HasKey("DisciplineID")
+                        .HasName("pk_cd_discipline_discipline_id");
+
+                    b.ToTable("Disciplines");
+                });
+
             modelBuilder.Entity("Ivan1.Models.Group", b =>
                 {
                     b.Property<int>("GroupId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("student_id")
+                        .HasColumnName("group_id")
                         .HasComment("Идентефикатор записи группы");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GroupId"));
@@ -38,7 +60,7 @@ namespace Ivan1.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar")
-                        .HasColumnName("c_student_first_name");
+                        .HasColumnName("c_group_name");
 
                     b.HasKey("GroupId")
                         .HasName("pk_cd_group_group_id");
@@ -55,6 +77,9 @@ namespace Ivan1.Migrations
                         .HasComment("Идентефикатор записи студента");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StudentId"));
+
+                    b.Property<int>("DisciplineID")
+                        .HasColumnType("integer");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -80,6 +105,8 @@ namespace Ivan1.Migrations
                     b.HasKey("StudentId")
                         .HasName("pk_cd_student_student_id");
 
+                    b.HasIndex(new[] { "DisciplineID" }, "idx_cd_student_fk_f_discipline_id");
+
                     b.HasIndex(new[] { "GroupId" }, "idx_cd_student_fk_f_group_id");
 
                     b.ToTable("cd_student", (string)null);
@@ -87,12 +114,21 @@ namespace Ivan1.Migrations
 
             modelBuilder.Entity("Ivan1.Models.Student", b =>
                 {
+                    b.HasOne("Ivan1.Models.Discipline", "Discipline")
+                        .WithMany()
+                        .HasForeignKey("DisciplineID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_f_discipline_id");
+
                     b.HasOne("Ivan1.Models.Group", "Group")
                         .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_f_group_id");
+
+                    b.Navigation("Discipline");
 
                     b.Navigation("Group");
                 });

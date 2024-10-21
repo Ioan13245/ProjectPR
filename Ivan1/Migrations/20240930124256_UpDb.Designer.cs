@@ -2,6 +2,7 @@
 using Ivan1.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ivan1.Migrations
 {
     [DbContext(typeof(StudentDbContext))]
-    partial class StudentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240930124256_UpDb")]
+    partial class UpDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,8 +57,7 @@ namespace Ivan1.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GroupId"));
 
                     b.Property<int>("DisciplineID")
-                        .HasColumnType("integer")
-                        .HasColumnName("c_group_id");
+                        .HasColumnType("integer");
 
                     b.Property<string>("GroupName")
                         .IsRequired()
@@ -90,8 +92,7 @@ namespace Ivan1.Migrations
                         .HasColumnName("c_student_first_name");
 
                     b.Property<int>("GroupId")
-                        .HasColumnType("integer")
-                        .HasColumnName("c_group_id");
+                        .HasColumnType("integer");
 
                     b.Property<string>("LastName")
                         .IsRequired()

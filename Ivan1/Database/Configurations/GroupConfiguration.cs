@@ -20,14 +20,29 @@ namespace Ivan1.Database.Configurations
 
             //расписываем названия колонок в бд и их обязательгность и тд и тп
             builder.Property(p => p.GroupId)
-                .HasColumnName("student_id")
+                .HasColumnName("group_id")
                 .HasComment("Идентефикатор записи группы");
 
             builder.Property(p => p.GroupName)
                 .IsRequired()
-                .HasColumnName("c_student_first_name")
+                .HasColumnName("c_group_name")
                 .HasColumnType(ColumnType.String).HasMaxLength(100);
 
+            builder.Property(p => p.DisciplineID)
+                .IsRequired()
+                .HasColumnName("c_group_id");
+
+            builder.ToTable(TableName)
+                .HasOne(p => p.Discipline)
+                .WithMany()
+                .HasForeignKey(p => p.DisciplineID)
+                .HasConstraintName("fk_f_group_id")
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.ToTable(TableName)
+                .HasIndex(p => p.GroupId, $"idx_{TableName}_fk_f_discipline_id");
+
+            builder.Navigation(p => p.Discipline)
+                .AutoInclude();
         }
     }
 }
